@@ -1,0 +1,22 @@
+services:
+
+  docker:
+    image: docker:dind
+    privileged: true
+    volumes:
+      - certs:/certs
+
+  docker_client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: bash -c 'while [ 1 ]; do sleep 1; done'
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: 1
+      DOCKER_CERT_PATH: /certs/client
+    volumes:
+      - certs:/certs
+
+volumes:
+  certs:
